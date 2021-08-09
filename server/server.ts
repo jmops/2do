@@ -1,60 +1,66 @@
 'use strict'
-import express, { request } from 'express';
+import express from 'express';
 import {Request, Response} from 'express'
 import {appConst} from './const'
-import * as taskModel from './db/task'
 import errorHandler from './errorHandler'
-import dbInit from './db/db'
+import {db} from './db/db'
+//import cookieParser from 'cookie-parser'
+import tasksRouter from './routes/tasks'
+import profileRouter from './routes/profile'
+
+import session from 'express-session'
+import {default as connectMongoDBSession} from 'connect-mongodb-session'
+import { util } from './util';
+const mongoStore = connectMongoDBSession(session)
 const app =  express();
 
-dbInit().then(() =>{
-    console.log('Database connected')
+const store = new mongoStore({
+  uri : appConst.DATABASEURI,
+  collection : 'sessions'
+})
+
+util.createNewRandomSecret()
+
+db.dbInit().then(() =>{ // Make sure the database is connected before processing requests
+
+
+    app.listen(appConst.LISTENINGPORT , () => {
+      console.log(`Listening on port ${appConst.LISTENINGPORT} ...`)
+    })
+    
+    
+    app.use(express.json()); // Parse json
+    
+    app.use((req : Request, res : Response, next : Function ) => {
+      console.log(req.method)
+      if( req.method === 'POST' && req.get('Content-type') !== 'application/json'  ){ // invalid content type for POST requests
+        res.status(appConst.HTTPCODE.NOTACCEPTABLE).end()
+      }else{
+        next() // continue to endpoint
+      }
+      
+    })
+    
+
+
+    app.use(session({
+      secret : appConst.RANDOMSECRET,
+      resave : false,
+      saveUninitialized : false,
+      store : store
+    }))
+
+    /**************************************************************************
+     * Endpoints
+     *************************************************************************/
+    app.use('/tasks', tasksRouter)
+    app.use('/profile', profileRouter)
+
 }).catch((rej) =>{
     console.log('error connecting to database: ' + rej)
+    process.exit(1); 
 })
 
 
-app.listen(appConst.LISTENINGPORT , () => {
-  console.log(`Listening on port ${appConst.LISTENINGPORT} ...`)
-})
 
 
-/**************************************************************************
- * Middleware 
- *************************************************************************/
-app.use(express.json()); // Parse json
-
-app.use((req : Request, res : Response, next : Function ) => {
-  console.log(req.method)
-  if( req.method === 'POST' && req.get('Content-type') !== 'application/json'  ){ // invalid content type for POST requests
-    res.status(appConst.HTTPCODE.NOTACCEPTABLE).end()
-  }
-  
-  next() // continue to endpoint
-})
-
-
-/**************************************************************************
- * Endpoints
- *************************************************************************/
-app.get('/', (req : Request , res : Response) => {
-  res.send('Hello World!')
-})
-
-
-app.post('/new-task', (req : Request, res : Response) =>{
-  try{
-    console.log(JSON.stringify(req.body))
-      taskModel.insertNewTask(req.body.task).then(() =>{
-        res.status(appConst.HTTPCODE.OK).send('okidoki')
-      }
-      ).catch((rej) =>{
-        console.log(rej)
-        res.status(appConst.HTTPCODE.INTERNALSERVERERROR).end()     
-      })
-  } catch (e){
-    console.log(e.message)
-    errorHandler(e.message, e.name)
-    res.status(appConst.HTTPCODE.BADREQUEST).end()
-  }
-})

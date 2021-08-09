@@ -5,5 +5,10 @@ export const appConst = {
         NOTACCEPTABLE : 406,
         BADREQUEST : 400,
         OK : 200
-    }
+    },
+    DATABASEURI : "mongodb://localhost:27017/2do",
+    BCRYPTSALTRPOUNDS : 10,
+    RANDOMSECRET : '',
+    LENGTHOFRANDOMSECRETSTRING : 26,
+    SESSIONMAXAGE : 86400
 }
