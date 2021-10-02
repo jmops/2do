@@ -18,20 +18,27 @@ export const apiCcontroller = {
              * @param res 
              */
             newUser : function(req : Request, res : Response){
-                if(typeof req.body.name === 'string' && typeof req.body.password === 'string'){
-                    util.createNewUser(req.body.name, req.body.password).then((resolve) =>{
-                      res.status(appConst.HTTPCODE.OK).redirect('/login')
-                    }).catch((rej) =>{
-                        console.log(rej)
-                        if(rej){
-                            res.status(appConst.HTTPCODE.BADREQUEST).send(rej)
-                        }else{
-                            res.status(appConst.HTTPCODE.INTERNALSERVERERROR).end()
-                        }
-                    })
-                }
-                else{
-                    res.status(appConst.HTTPCODE.BADREQUEST).end()
+                try{
+
+                    if(typeof req.body.name === 'string' && typeof req.body.password === 'string'){
+                        util.createNewUser(req.body.name, req.body.password).then((resolve) =>{
+                          res.status(appConst.HTTPCODE.OK).redirect('/login')
+                        }).catch((rej) =>{
+                            console.log(rej)
+                            if(rej){
+                                res.status(appConst.HTTPCODE.BADREQUEST).send(rej)
+                            }else{
+                                res.status(appConst.HTTPCODE.INTERNALSERVERERROR).end()
+                            }
+                        })
+                    }
+                    else{
+                        res.status(appConst.HTTPCODE.BADREQUEST).end()
+                    }
+                
+                
+                }catch(e){
+
                 }
             },
             /**
@@ -39,20 +46,51 @@ export const apiCcontroller = {
              * @param req 
              * @param res 
              */
-            login : function(req : Request, res : Response){
-                /*if(typeof req.body.name === 'string' && typeof req.body.password === 'string'){
-                    util.authorizeUser(req.body.name, req.body.password).then((res) =>{
-                      
-                    })
-                  }*/
-                  //req.session.authenticated = true
+            login : async function(req : Request, res : Response){
+                try{
+                    if(typeof req.body.name === 'string' && typeof req.body.password === 'string'){
+                        await util.authorizeUser(req.body.name, req.body.password)
+                        
+                        console.log('yo login')
+                        req.session.user = req.body.name
+                        req.session.save((err : any) => {
+                            if(err) {
+                                res.status(appConst.HTTPCODE.INTERNALSERVERERROR).end()
+                            }
+                            res.status(appConst.HTTPCODE.OK).redirect('/tasks/get-tasks')
+                        })
+                    }
+                    else{
+                        res.status(appConst.HTTPCODE.BADREQUEST).end()
+                    }
+
+                }catch(e){
+                    if(typeof e !== 'undefined'){
+                        res.status(appConst.HTTPCODE.BADREQUEST).send(e)
+                    }
+                    else{
+                        res.status(appConst.HTTPCODE.BADREQUEST).end()
+
+                    }
+
+                }
             }
         },
         /**
          * Handle GET requests for the /profile path
          */
         GET : {
-
+            logout : function(req : Request, res : Response){
+                if(req.session){
+                    req.session.destroy((err : any) =>{
+                        if(err){
+                            res.status(appConst.HTTPCODE.INTERNALSERVERERROR).end()
+                        }
+                        res.status(appConst.HTTPCODE.OK).end()
+                    })
+                }
+                res.status(appConst.HTTPCODE.BADREQUEST).end()
+            }
         }
     },
         /**

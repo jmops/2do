@@ -1,5 +1,5 @@
 # 2do
-A simpe todo web-app created with the MERN-stack
+A simpe todo web-app created with the MERN-stack. This project is not meant to be in production, and should not be accessable via the internet.
 
 
 ## Instructions 

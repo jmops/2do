@@ -27,23 +27,29 @@ export let db = {
             })
         })
     },
-    insertNewUser : function(user : User) : Promise<boolean> {
+    /**
+     * Insert a new user. 
+     * @param user the new user
+     * @returns 
+     */
+    insertNewUser : function(username : string, hashedPassword : string) : Promise<boolean> {
         const newUser = new UserModel({
-            name : user.name,
-            password : user.password,
-            tasksDone : user.tasksDone,
-            trackingStarted : user.trackingStarted
+            name : username,
+            password : hashedPassword,
+            tasksDone : 0,
+            trackingStarted : new Date()
         })
         return new Promise((resolve, reject)=>{
             newUser.save((err) =>{
                 if(err){
                     console.log(err)
-                        reject(err)
+                        reject()
                 }
                 else{
                     resolve(true)
                 }
             })
+
         })
     },
     /**
@@ -101,19 +107,6 @@ export let db = {
 
         })
     },
-    authorizeUser : function(name : string, password : string) : Promise<boolean>{
-        return new Promise(async (resolve, reject) =>{
-            try{
-                let user : User | null  = this.findUser(name)
-                if(user){
-                    this.checkPassword(password, user)
-                }
-                //let hashedPassword : string = util.hashPassword(password)
-            }catch(e){
-                
-            }
-        })
-    },
     /**
      * See if a user exist.
      * @param nameToCheck 
@@ -141,15 +134,18 @@ export let db = {
      * @param password the password in question
      * @param user The user whose password we want to check against.
      */
-    checkPassword : async function(password : string, user : User) : Promise<boolean>{
-        try{
-            if(await bcrypt.compare(password, user.password)){
-                return true
+    checkPassword : function(password : string, user : User) : Promise<boolean>{
+        return new Promise(async (resolve, reject) =>{
+            try{
+                if(await bcrypt.compare(password, user.password)){
+                    resolve(true)
+                }
+                else{reject()}
+            } catch(e){
+                reject()
             }
-            return false
-        } catch(e){
-            return false
-        }
+
+        })
     }
     
 
