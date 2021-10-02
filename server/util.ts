@@ -64,7 +64,7 @@ export let util = {
     },
 
     /**
-     * Log in the user. 
+     * Authorize the user. 
      * @param name
      * @param password 
      */

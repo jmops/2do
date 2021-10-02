@@ -1,5 +1,6 @@
 # 2do
-A simpe todo web-app created with the MERN-stack. This project is not meant to be in production, and should not be accessable via the internet.
+!!IN PROGRESS!!
+A simpe todo web-app created with the MERN-stack. Currently not fit to be in production
 
 
 ## Instructions 
@@ -14,6 +15,13 @@ sudo apt install ./mongodb-org-server_4.4.6_amd64.deb
 
 sudo systemctl start mongod
 
+### Start the server
+- cd into /server
+-  run the command "npm run br" which runs tsc and starts nodemon
 
 ## todo
 - Authentication for the database (currently super duper insecure, no need for credentials)
+- Using session cookies to retrieve the users tasks
+- Frontend
+- Make sure no endpoint reveal sensetive information from testing
+- Use async/await with try/catch everywhere istead of promises.then().catch()

@@ -17,7 +17,7 @@
  
  profileRouter.post('/new-user',apiCcontroller.profile.POST.newUser)
  profileRouter.post('/login', apiCcontroller.profile.POST.login)
- profileRouter.get('logout', apiCcontroller.profile.GET.logout)
+ profileRouter.get('/logout', apiCcontroller.profile.GET.logout)
  
  
 

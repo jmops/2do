@@ -51,13 +51,12 @@ export const apiCcontroller = {
                     if(typeof req.body.name === 'string' && typeof req.body.password === 'string'){
                         await util.authorizeUser(req.body.name, req.body.password)
                         
-                        console.log('yo login')
                         req.session.user = req.body.name
                         req.session.save((err : any) => {
                             if(err) {
                                 res.status(appConst.HTTPCODE.INTERNALSERVERERROR).end()
                             }
-                            res.status(appConst.HTTPCODE.OK).redirect('/tasks/get-tasks')
+                            res.status(appConst.HTTPCODE.OK).redirect('/tasks/get-tasks') // user is authenticated, redirect
                         })
                     }
                     else{
