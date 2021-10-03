@@ -73,9 +73,7 @@ export let util = {
             try{
                 let user : User | null  = await db.findUser(name)
                 if(user){
-                    console.log('yo auth')
                     await db.checkPassword(password, user)
-                        console.log('yo cc')
                         resolve(true)
                 }
                 else{
