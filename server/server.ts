@@ -4,7 +4,6 @@ import {Request, Response} from 'express'
 import {appConst} from './const'
 import errorHandler from './errorHandler'
 import {db} from './db/db'
-//import cookieParser from 'cookie-parser'
 import tasksRouter from './routes/tasks'
 import profileRouter from './routes/profile'
 
@@ -41,8 +40,6 @@ db.dbInit().then(() =>{ // Make sure the database is connected before processing
       
     })
     
-
-
     app.use(session({
       secret : appConst.RANDOMSECRET,
       resave : false,

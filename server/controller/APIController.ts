@@ -88,7 +88,9 @@ export const apiCcontroller = {
                         res.status(appConst.HTTPCODE.OK).end()
                     })
                 }
-                res.status(appConst.HTTPCODE.BADREQUEST).end()
+                else{
+                    res.status(appConst.HTTPCODE.BADREQUEST).end()
+                }
             }
         }
     },

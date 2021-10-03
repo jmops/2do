@@ -24,3 +24,6 @@
 {
     "taskid":"the _id of the task"
 }
+
+- path: localhost:8080/profile/logout
+- method: GET
