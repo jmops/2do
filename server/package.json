@@ -23,7 +23,7 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.0.1",
-    "connect-mongodb-session": "^2.4.1",
+    "connect-mongodb-session": "^3.1.1",
     "express-session": "^1.17.2",
     "mongodb": "^3.7.2",
     "mongoose": "^5.13.10"
