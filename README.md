@@ -18,9 +18,9 @@ sudo systemctl start mongod
 ### Start the server
 - cd into /server
 -  run the command "npm run br" which runs tsc and starts nodemon
+- Take a look at server/api.md for working API's
 
 ## todo
-- Authentication for the database (currently super duper insecure, no need for credentials)
 - Using session cookies to retrieve the users tasks
 - Frontend
 - Make sure no endpoint reveal sensetive information from testing

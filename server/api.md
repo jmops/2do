@@ -15,6 +15,13 @@
     "password" : "heihei"
 }
 
+- path: localhost:8080/tasks/new-task
+- method: POST
+-body:
+{
+    "task" : "this is a task"
+}
+
 - path: localhost:8080/tasks/get-tasks
 - method: GET
 
